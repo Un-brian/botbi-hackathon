@@ -57,18 +57,18 @@ if __name__ == '__main__':
     app = create_app()
     
     print("=" * 60)
-    print("🚀 BOTBI PULSE - Sistema Automatizado de Noticias")
+    print(" BOTBI PULSE - Sistema Automatizado de Noticias")
     print("=" * 60)
-    print(f"📊 Base de datos: {Config.DATABASE_PATH}")
-    print(f"🌐 Servidor: http://{Config.HOST}:{Config.PORT}")
-    print(f"🤖 IA configurada: {'✅ Sí' if Config.GEMINI_API_KEY else '❌ No'}")
+    print(f" Base de datos: {Config.DATABASE_PATH}")
+    print(f"Servidor: http://{Config.HOST}:{Config.PORT}")
+    print(f" IA configurada: {'✅ Sí' if Config.GEMINI_API_KEY else '❌ No'}")
     print("=" * 60)
-    print("\n📡 Endpoints disponibles:")
+    print("\n Endpoints disponibles:")
     print("   GET  /api/news          - Obtener noticias")
     print("   POST /api/news          - Crear noticia")
     print("   GET  /api/status        - Estado del sistema")
     print("   GET  /api/health        - Health check")
-    print("\n💡 Presiona Ctrl+C para detener el servidor\n")
+    print("\nPresiona Ctrl+C para detener el servidor\n")
     
     app.run(
         host=Config.HOST,
