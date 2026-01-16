@@ -23,7 +23,7 @@ class Config:
     
     # Google Gemini API
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-    GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-pro')
+    GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'models/gemini-2.5-flash')
     
     # Email (para newsletter)
     SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
