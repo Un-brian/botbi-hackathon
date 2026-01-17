@@ -1,3 +1,7 @@
+"""
+Web Scraper - Obtención de noticias desde fuentes RSS
+"""
+
 import requests
 from bs4 import BeautifulSoup
 import logging
@@ -34,11 +38,11 @@ class NewsScraper:
     def _obtener_soup(self, url):
         """Descarga optimizada con manejo de timeouts y parser XML"""
         try:
-            # + timeout a 15s para conexiones lentas (como BBC)
+            # timeout a 15s para conexiones lentas
             response = requests.get(url, headers=self.headers, timeout=15)
             response.raise_for_status()
             
-            # MEJORA TÉCNICA: Usamos 'xml' (lxml) en lugar de 'html.parser'
+            # Uso 'xml' (lxml) en lugar de 'html.parser'
             return BeautifulSoup(response.content, 'xml') 
         except Exception as e:
             logger.error(f"❌ Falló conexión a {url}: {str(e)[:100]}...") 
@@ -50,20 +54,23 @@ class NewsScraper:
         urls = self.feeds.get(categoria, [])
         
         for url in urls:
-            if len(noticias) >= limite: break
+            if len(noticias) >= limite: 
+                break
             
             logger.info(f"📡 Escaneando: {url}")
             soup = self._obtener_soup(url)
-            if not soup: continue
+            if not soup: 
+                continue
 
-            #oporte para RSS estándar (<item>) y Atom (<entry>)
+            # Soporte para RSS estándar (<item>) y Atom (<entry>)
             items = soup.find_all(['item', 'entry'], limit=limite)
             
             for item in items:
-                if len(noticias) >= limite: break
+                if len(noticias) >= limite: 
+                    break
 
                 try:
-                    # Extracción resiliente (intenta varios tags estándar)
+                    # Extracción resiliente
                     titulo = item.find('title').text.strip()
                     
                     link = item.find('link')
@@ -77,12 +84,12 @@ class NewsScraper:
                     desc = item.find('content:encoded') or item.find('description') or item.find('summary')
                     contenido_raw = desc.text.strip() if desc else "Detalles en la fuente original."
                     
-                    # Limpieza básica de HTML en el texto
+                    # Limpieza básica de HTML
                     contenido_limpio = BeautifulSoup(contenido_raw, "html.parser").text
 
                     noticia = {
                         'titulo': titulo,
-                        'contenido': contenido_limpio[:600] + "...", # Límite para IA
+                        'contenido': contenido_limpio[:600] + "...",  # Límite para IA
                         'categoria': categoria,
                         'fecha': datetime.now().isoformat(),
                         'fuente_original': url_nota
@@ -90,16 +97,68 @@ class NewsScraper:
                     noticias.append(noticia)
                     
                 except AttributeError:
-                    continue # Si falta un campo crítico, saltamos la noticia
+                    continue  # Si falta un campo crítico, saltamos la noticia
                 except Exception as e:
                     logger.warning(f"⚠️ Error procesando item en {url}: {e}")
                     continue
         
+        logger.info(f"✅ {len(noticias)} noticias obtenidas de {categoria}")
         return noticias
 
-    def obtener_todas_las_noticias(self):
-        """Interfaz pública del servicio"""
+    def obtener_todas_las_noticias_metodo(self):
+        """Método de clase (para uso interno)"""
         return {
             'Tecnología': self.obtener_noticias_por_categoria('Tecnología'),
             'Negocios': self.obtener_noticias_por_categoria('Negocios')
         }
+
+
+
+# para uso directo en la llamada/uso del poblar_bd ============================================
+
+def obtener_todas_las_noticias(limite_por_categoria=5):
+    """
+    Función de conveniencia para usar el scraper sin instanciar la clase
+    
+    Args:
+        limite_por_categoria (int): Noticias máximas por categoría
+    
+    Returns:
+        dict: {'Tecnología': [...], 'Negocios': [...], 'total': int}
+    """
+    scraper = NewsScraper()
+    resultado = {}
+    total = 0
+    
+    print("\n" + "=" * 60)
+    print("🕸️  INICIANDO WEB SCRAPING")
+    print("=" * 60)
+    
+    for categoria in ['Tecnología', 'Negocios']:
+        print(f"\n📁 Obteniendo noticias de {categoria}...")
+        noticias = scraper.obtener_noticias_por_categoria(categoria, limite=limite_por_categoria)
+        resultado[categoria] = noticias
+        total += len(noticias)
+    
+    resultado['total'] = total
+    
+    print("\n" + "=" * 60)
+    print(f"✅ SCRAPING COMPLETADO: {total} noticias obtenidas")
+    print("=" * 60 + "\n")
+    
+    return resultado
+
+
+def obtener_noticias_por_categoria(categoria, limite=5):
+    """
+    Función de conveniencia para obtener noticias de una categoría específica
+    
+    Args:
+        categoria (str): 'Tecnología' o 'Negocios'
+        limite (int): Número máximo de noticias
+    
+    Returns:
+        list: Lista de diccionarios con noticias
+    """
+    scraper = NewsScraper()
+    return scraper.obtener_noticias_por_categoria(categoria, limite)

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botbi Pulse - El pulso de las finanzas inteligentes</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0a2e1f',
+                        'primary': '#10b981',
+                        'accent-neon': '#00ff88',
+                        'gray-50': '#f9fafb',
+                        'gray-700': '#374151',
+                        'gray-900': '#111827',
+                        'purple': '#8b5cf6',
+                        'pink': '#ec4899',
+                        'blue': '#3b82f6',
+                        'red': '#ef4444',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Gradiente para el fondo del contenido principal */
+        .main-gradient {
+            background: linear-gradient(135deg, #0a2e1f 0%, #0f5940 100%);
+        }
+        
+        /* Gradiente para el título hero */
+        .hero-title-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #00ff88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Ticker Animation - SIMPLE */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .ticker-content {
+            display: flex;
+            animation: scroll 40s linear infinite;
+        }
+        .ticker:hover .ticker-content {
+            animation-play-state: paused;
+        }
+        
+        /* Card hover - SIMPLE */
+        .news-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Modal - SIMPLE fade */
+        .modal {
+            transition: opacity 0.2s;
+        }
+        
+        /* Loading skeleton - SIMPLE pulse */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .skeleton {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+        }
+        
+        /* Badges de categoría */
+        .badge-tecnología { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .badge-negocios { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .badge-mercados { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .badge-cripto { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        
+        /* Line clamp utilities */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Animaciones de flotación para hero stats */
+        @keyframes float-1 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        
+        @keyframes float-2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(-2deg); }
+        }
+        
+        @keyframes float-3 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+        
+        @keyframes float-4 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(-1deg); }
+        }
+        
+        @keyframes float-5 {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-18px) scale(1.05); }
+        }
+        
+        .animate-float-1 { animation: float-1 8s ease-in-out infinite; }
+        .animate-float-2 { animation: float-2 7s ease-in-out infinite; }
+        .animate-float-3 { animation: float-3 9s ease-in-out infinite; }
+        .animate-float-4 { animation: float-4 6.5s ease-in-out infinite; }
+        .animate-float-5 { animation: float-5 7.5s ease-in-out infinite; }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.3);
+        }
+        
+        /* Scroll spy - Menu items activos */
+        .menu-item.active .flex {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 106, 0.1) 100%);
+            position: relative;
+        }
+        
+        .menu-item.active .flex::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 70%;
+            background: linear-gradient(180deg, #00ff88 0%, #00cc6a 100%);
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .menu-item.active span {
+            color: #000 !important;
+            font-weight: 700;
+        }
+        
+        .menu-item.active .w-10 {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 204, 106, 0.3) 100%);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <!-- Layout Principal 80/20 -->
+    <div class="flex min-h-screen">
+        
+        <!-- Lado Izquierdo: Contenido Principal (80%) -->
+        <main class="flex-1 w-full lg:w-4/5 main-gradient">
+            
+            <!-- 1. TICKER DE CRIPTOMONEDAS (arriba de todo) -->
+            <div class="ticker overflow-hidden bg-black bg-opacity-40 backdrop-blur-md py-3">
+                <div class="ticker-content" id="tickerContent">
+                    <!-- JavaScript llenará esto con datos de /api/markets/ticker -->
+                </div>
+            </div>
+            
+            <!-- 2. HERO SECTION -->
+            <section id="inicio" class="hero relative px-8 lg:px-12 py-20 overflow-hidden">
+                <!-- Background decorativo -->
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(0,255,136,0.03) 50px, rgba(0,255,136,0.03) 51px);"></div>
+                </div>
+                
+                <!-- Floating stats cards -->
+                <div class="floating-stats absolute inset-0 pointer-events-none">
+                    <!-- Card 1 - BTC Price -->
+                    <div class="stat-card absolute top-64 left-24 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-1">
+                        <p class="text-sm text-white/70 mb-1">BTC Price</p>
+                        <p class="text-2xl font-bold text-white">$43.5K</p>
+                        <p class="text-xs text-green-400">+2.4% ▲</p>
+                    </div>
+                    
+                    <!-- Card 2 - Noticias IA -->
+                    <div class="stat-card absolute top-48 right-24 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-2">
+                        <p class="text-sm text-white/70 mb-1">Noticias IA</p>
+                        <p class="text-3xl font-bold text-white">1,247</p>
+                        <p class="text-xs text-white/60">Esta semana</p>
+                    </div>
+                    
+                    <!-- Card 3 - ETH Price -->
+                    <div class="stat-card absolute top-1/2 left-32 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-3">
+                        <p class="text-sm text-white/70 mb-1">ETH Price</p>
+                        <p class="text-2xl font-bold text-white">$2.3K</p>
+                        <p class="text-xs text-red-400">-1.2% ▼</p>
+                    </div>
+                    
+                    <!-- Card 4 - Usuarios -->
+                    <div class="stat-card absolute top-2/3 right-20 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-4">
+                        <p class="text-sm text-white/70 mb-1">Usuarios activos</p>
+                        <p class="text-2xl font-bold text-white">8.2K</p>
+                        <p class="text-xs text-green-400">+340 hoy</p>
+                    </div>
+                    
+                    <!-- Card 5 - IA Status -->
+                    <div class="stat-card absolute bottom-32 right-40 bg-white/10 backdrop-blur-md rounded-xl p-3 shadow-2xl border border-white/20 animate-float-5">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-lg">
+                                ✨
+                            </div>
+                            <div>
+                                <p class="text-xs text-white/70">IA Activa</p>
+                                <p class="text-sm font-bold text-white">24/7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contenido principal (sobre las cards) -->
+                <div class="relative z-10">
+                    <h1 class="text-4xl lg:text-6xl font-bold text-white mb-4">
+                        BOTBI PULSE: <span class="text-accent-neon">El pulso de las finanzas inteligentes</span>
+                    </h1>
+                    <p class="text-lg lg:text-xl text-white text-opacity-90 mb-8 max-w-2xl">
+                        Cripto, Negocios e IA en tiempo real. Resúmenes instantáneos generados por IA, análisis de mercados y alertas personalizadas.
+                    </p>
+                    <button class="bg-accent-neon text-primary-dark px-8 py-4 rounded-lg font-bold text-lg hover:scale-105 hover:shadow-2xl hover:shadow-green-500/50 transition-all" onclick="scrollToNewsletter()">
+                        Comenzar Ahora
+                    </button>
+                </div>
+            </section>
+            
+            <!-- 3. GRID DE NOTICIAS -->
+            <section class="news-grid px-8 lg:px-12 pb-20" id="noticiasSection">
+                <h2 class="text-3xl font-bold text-white mb-8">Últimas Noticias</h2>
+                
+                <!-- Filtros de categoría -->
+                <div class="flex gap-4 mb-8 flex-wrap">
+                    <button class="filter-btn bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-colors" onclick="filtrarNoticias('Todas', this)">
+                        Todas
+                    </button>
+                    <button class="filter-btn bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-colors" onclick="filtrarNoticias('Tecnología', this)">
+                        Tecnología
+                    </button>
+                    <button class="filter-btn bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-colors" onclick="filtrarNoticias('Negocios', this)">
+                        Negocios
+                    </button>
+                </div>
+                
+                <!-- Grid de tarjetas (2 columnas) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="newsGrid">
+                    <!-- JavaScript llenará esto -->
+                </div>
+                
+                <!-- Loading skeleton (mostrar mientras carga) -->
+                <div id="loadingSkeleton" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+                    <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+                    <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+                    <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
+                </div>
+                
+                <!-- Error state -->
+                <div id="errorState" class="hidden bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg">
+                    <p class="font-bold">Error al cargar noticias</p>
+                    <p>No se pudo conectar con el servidor. <button onclick="cargarNoticias()" class="underline">Reintentar</button></p>
+                </div>
+            </section>
+            
+            <!-- 4. SECCIÓN DE MERCADOS -->
+            <section class="markets px-8 lg:px-12 pb-20" id="mercadosSection">
+                <h2 class="text-3xl font-bold text-white mb-8">Mercados en Tiempo Real</h2>
+                
+                <!-- Tabs: Acciones / Criptos -->
+                <div class="flex gap-4 mb-6">
+                    <button class="tab-btn active bg-accent-neon text-primary-dark px-6 py-2 rounded-lg font-semibold" onclick="mostrarMercado('crypto', this)">
+                        Criptomonedas
+                    </button>
+                    <button class="tab-btn bg-white bg-opacity-20 text-white px-6 py-2 rounded-lg font-semibold" onclick="mostrarMercado('stocks', this)">
+                        Acciones
+                    </button>
+                </div>
+                
+                <!-- Grid de mercados (cards premium) -->
+                <div class="bg-white bg-opacity-10 rounded-lg p-6 backdrop-blur-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="marketList">
+                        <!-- JavaScript llenará esto con cards premium -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 5. NEWSLETTER SIGNUP -->
+            <section class="newsletter px-8 lg:px-12 py-20 border-t border-white border-opacity-20" id="newsletterSection">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl font-bold text-white mb-4">Recibe el Pulso Diario</h2>
+                    <p class="text-white text-opacity-90 mb-6">
+                        Las 10 noticias más importantes del día, procesadas por IA. Directo a tu email cada mañana.
+                    </p>
+                    <form class="flex gap-4 flex-col sm:flex-row" onsubmit="suscribirNewsletter(event)">
+                        <input 
+                            type="email" 
+                            placeholder="tu@email.com" 
+                            required
+                            class="flex-1 px-6 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-60 border border-white border-opacity-30 focus:outline-none focus:border-accent-neon"
+                        >
+                        <button type="submit" class="bg-accent-neon text-primary-dark px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform">
+                            Suscribirme
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Lado Derecho: Menú Lateral Fijo (20%) -->
+        <aside class="hidden lg:block w-80 bg-white p-8 sticky top-0 h-screen overflow-y-auto shadow-xl">
+            <!-- Branding -->
+            <div class="mb-12 pb-6 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900">BOTBI PULSE</h2>
+                <p class="text-sm text-gray-500 mt-1">Finanzas inteligentes</p>
+            </div>
+            
+            <nav class="space-y-2">
+                <!-- Inicio -->
+                <a href="#inicio" class="menu-item group" data-section="inicio">
+                    <div class="flex items-center gap-4 px-5 py-4 rounded-xl transition-all hover:bg-gray-50 cursor-pointer">
+                        <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#00ff88]/20 transition-all">
+                            <span class="text-xl group-hover:scale-110 transition-transform">🏠</span>
+                        </div>
+                        <span class="font-semibold text-gray-600 group-hover:text-gray-900">Inicio</span>
+                    </div>
+                </a>
+                
+                <!-- Noticias -->
+                <a href="#noticiasSection" class="menu-item group" data-section="noticias">
+                    <div class="flex items-center gap-4 px-5 py-4 rounded-xl transition-all hover:bg-gray-50 cursor-pointer">
+                        <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#00ff88]/20 transition-all">
+                            <span class="text-xl group-hover:scale-110 transition-transform">📰</span>
+                        </div>
+                        <span class="font-semibold text-gray-600 group-hover:text-gray-900">Noticias</span>
+                    </div>
+                </a>
+                
+                <!-- Mercados -->
+                <a href="#mercadosSection" class="menu-item group" data-section="mercados">
+                    <div class="flex items-center gap-4 px-5 py-4 rounded-xl transition-all hover:bg-gray-50 cursor-pointer">
+                        <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#00ff88]/20 transition-all">
+                            <span class="text-xl group-hover:scale-110 transition-transform">📊</span>
+                        </div>
+                        <span class="font-semibold text-gray-600 group-hover:text-gray-900">Mercados</span>
+                    </div>
+                </a>
+            </nav>
+            
+            <!-- CTA de suscripción (reemplaza el login) -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <button onclick="scrollToNewsletter()" class="w-full flex items-center gap-4 px-5 py-4 rounded-xl bg-gradient-to-r from-[#00ff88] to-[#00cc6a] hover:from-[#00cc6a] hover:to-[#00ff88] transition-all shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/50 cursor-pointer group">
+                    <div class="w-10 h-10 rounded-lg bg-white/30 flex items-center justify-center">
+                        <span class="text-xl group-hover:scale-110 transition-transform">📧</span>
+                    </div>
+                    <span class="font-bold text-[#0a2e1f]">Suscribirse</span>
+                </button>
+            </div>
+            
+            <!-- Stats del sistema -->
+            <div class="mt-8 p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
+                <p class="text-xs text-gray-500 mb-2">Actualizado hace 2 min</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">Estado del sistema</span>
+                    <span class="flex items-center gap-1 text-xs text-green-600">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        Operativo
+                    </span>
+                </div>
+            </div>
+        </aside>
+        
+    </div>
+
+    <!-- MODAL DE RESUMEN IA -->
+    <div id="modalResumen" class="modal hidden fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4" onclick="cerrarModal()">
+        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onclick="event.stopPropagation()">
+            
+            <!-- Header sticky -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 rounded-t-3xl z-10">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                            ✨ Procesado por IA
+                        </span>
+                        <span id="modalBadgeCategoria" class="px-4 py-2 rounded-full text-sm font-bold text-white shadow-lg"></span>
+                    </div>
+                    <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-900 text-3xl font-light w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all">
+                        ×
+                    </button>
+                </div>
+                
+                <h2 id="modalTitulo" class="text-4xl font-bold text-gray-900 leading-tight mb-3"></h2>
+                
+                <div class="flex items-center gap-4 text-sm text-gray-500">
+                    <span id="modalFecha" class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+                        </svg>
+                        Hace 6h
+                    </span>
+                    <span class="text-gray-300">•</span>
+                    <span class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                        </svg>
+                        3 min lectura
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Body -->
+            <div class="px-8 py-6">
+                <!-- Resumen destacado -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-r-xl p-6 mb-8 shadow-sm">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                        </svg>
+                        <p class="font-bold text-blue-900 text-lg">Resumen en 30 segundos</p>
+                    </div>
+                    <p id="modalResumenTexto" class="text-blue-900 leading-relaxed text-base"></p>
+                </div>
+                
+                <!-- Contenido principal -->
+                <div id="modalContenido" class="prose prose-lg max-w-none mb-8">
+                    <!-- Se inyecta dinámicamente -->
+                </div>
+                
+                <!-- Puntos clave -->
+                <div class="bg-gray-50 rounded-2xl p-6 mb-6">
+                    <h3 class="font-bold text-xl text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-2xl">🔑</span>
+                        Puntos Clave
+                    </h3>
+                    <ul id="modalPuntosClave" class="space-y-3">
+                        <!-- Se inyectan dinámicamente -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Footer sticky -->
+            <div class="sticky bottom-0 bg-gradient-to-t from-white via-white to-transparent px-8 py-6 border-t border-gray-200 rounded-b-3xl">
+                <div class="flex items-center gap-4">
+                    <a id="modalFuenteLink" href="#" target="_blank" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-4 px-6 rounded-xl transition-all text-center">
+                        📰 Leer fuente original →
+                    </a>
+                    <button onclick="cerrarModal()" class="flex-1 bg-gradient-to-r from-[#00ff88] to-[#00cc6a] hover:from-[#00cc6a] hover:to-[#00ff88] text-[#0a2e1f] font-bold py-4 px-6 rounded-xl shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/50 transition-all">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE LOGIN (slide-in) -->
+    <div id="loginPanel" class="hidden fixed top-0 right-0 w-96 h-full bg-white bg-opacity-95 backdrop-blur-xl shadow-2xl z-50 p-8">
+        <button class="absolute top-4 right-4 text-gray-400 hover:text-black text-3xl" onclick="cerrarLogin()">×</button>
+        
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Bienvenido</h2>
+        <p class="text-gray-600 mb-8">Accede a funciones premium</p>
+        
+        <form class="space-y-4" onsubmit="event.preventDefault(); alert('Login funcionalidad pendiente');">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent-neon" placeholder="tu@email.com">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent-neon" placeholder="••••••••">
+            </div>
+            <button type="submit" class="w-full bg-accent-neon text-primary-dark py-3 rounded-lg font-bold">
+                Iniciar Sesión
+            </button>
+        </form>
+        
+        <p class="text-center text-gray-500 mt-6 text-sm">
+            ¿No tienes cuenta? <a href="#" class="text-accent-neon font-semibold">Regístrate</a>
+        </p>
+    </div>
+
+    <script>
+// ============================================
+// CONFIGURACIÓN
+// ============================================
+const API_BASE = 'http://localhost:5000/api';
+let noticiasCargadas = [];
+let categoriaActual = 'Todas';
+
+// ============================================
+// 1. TICKER DE CRIPTOS
+// ============================================
+async function cargarTicker() {
+    try {
+        const response = await fetch(`${API_BASE}/markets/ticker`);
+        const data = await response.json();
+        
+        const tickerHTML = data.map(cripto => `
+            <div class="flex items-center gap-3 px-6 text-white font-mono text-sm whitespace-nowrap">
+                <span class="font-bold">${cripto.symbol}</span>
+                <span>$${parseFloat(cripto.price).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                <span class="${cripto.change_percent >= 0 ? 'text-green-400' : 'text-red-400'}">
+                    ${cripto.change_percent >= 0 ? '▲' : '▼'} ${Math.abs(cripto.change_percent).toFixed(2)}%
+                </span>
+            </div>
+        `).join('');
+        
+        // Duplicar para animación infinita
+        document.getElementById('tickerContent').innerHTML = tickerHTML + tickerHTML;
+        
+    } catch (error) {
+        console.error('Error cargando ticker:', error);
+        document.getElementById('tickerContent').innerHTML = '<div class="px-6 text-white text-sm whitespace-nowrap">Cargando datos del mercado...</div>';
+    }
+}
+
+// ============================================
+// 2. NOTICIAS
+// ============================================
+async function cargarNoticias(categoria = 'Todas') {
+    const grid = document.getElementById('newsGrid');
+    const skeleton = document.getElementById('loadingSkeleton');
+    const errorState = document.getElementById('errorState');
+    
+    // Mostrar loading
+    skeleton.classList.remove('hidden');
+    grid.innerHTML = '';
+    errorState.classList.add('hidden');
+    
+    try {
+        const url = categoria === 'Todas' 
+            ? `${API_BASE}/news` 
+            : `${API_BASE}/news?categoria=${categoria}`;
+        
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        noticiasCargadas = result.data || result || [];
+        
+        if (noticiasCargadas.length === 0) {
+            grid.innerHTML = '<p class="text-white col-span-2">No hay noticias disponibles en esta categoría.</p>';
+            skeleton.classList.add('hidden');
+            return;
+        }
+        
+        // Renderizar noticias con diseño premium
+        grid.innerHTML = noticiasCargadas.slice(0, 6).map((noticia, index) => {
+            const categoria = noticia.categoria || 'Tecnología';
+            const categoriaLower = categoria.toLowerCase();
+            
+            // Determinar colores según categoría
+            let borderColor = 'border-blue-500';
+            let badgeClass = 'bg-gradient-to-r from-blue-500 to-purple-600';
+            let shadowClass = 'shadow-blue-500/10 hover:shadow-blue-500/30';
+            let icon = '⚡';
+            
+            if (categoria === 'Negocios') {
+                borderColor = 'border-pink-500';
+                badgeClass = 'bg-gradient-to-r from-pink-500 to-red-500';
+                shadowClass = 'shadow-pink-500/10 hover:shadow-pink-500/30';
+                icon = '💼';
+            } else if (categoria === 'Cripto' || categoria === 'Criptomonedas') {
+                borderColor = 'border-green-500';
+                badgeClass = 'bg-gradient-to-r from-green-500 to-emerald-600';
+                shadowClass = 'shadow-green-500/10 hover:shadow-green-500/30';
+                icon = '₿';
+            }
+            
+            return `
+            <article class="news-card bg-white rounded-2xl p-8 cursor-pointer 
+                            border-l-[6px] ${borderColor} shadow-lg ${shadowClass} 
+                            hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]
+                            transition-all duration-500 ease-out" onclick="abrirModal(${index})">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="${badgeClass} px-4 py-2 rounded-full text-sm font-bold text-white shadow-lg">
+                        ${icon} ${categoria}
+                    </span>
+                    <span class="text-sm text-gray-500 font-medium">${formatearFecha(noticia.fecha)}</span>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-gray-900 mb-4 leading-tight line-clamp-2">${noticia.titulo}</h3>
+                
+                <p class="text-gray-600 text-base leading-relaxed line-clamp-3 mb-4">
+                    ${(noticia.contenido || '').substring(0, 150)}...
+                </p>
+                
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <span class="text-xs text-gray-400 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        Procesado por IA
+                    </span>
+                    <span class="text-blue-600 font-semibold text-sm hover:text-blue-700 flex items-center gap-1">
+                        Leer más 
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                </div>
+            </article>
+        `;
+        }).join('');
+        
+        skeleton.classList.add('hidden');
+        
+    } catch (error) {
+        console.error('Error cargando noticias:', error);
+        skeleton.classList.add('hidden');
+        errorState.classList.remove('hidden');
+    }
+}
+
+function filtrarNoticias(categoria, clickedButton = null) {
+    categoriaActual = categoria;
+    cargarNoticias(categoria === 'Todas' ? 'Todas' : categoria);
+    
+    // Actualizar botones activos
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-accent-neon', 'text-primary-dark');
+        btn.classList.add('bg-white', 'bg-opacity-20', 'text-white');
+    });
+    
+    // Si hay un botón clickeado, actualizarlo
+    if (clickedButton) {
+        clickedButton.classList.add('bg-accent-neon', 'text-primary-dark');
+        clickedButton.classList.remove('bg-white', 'bg-opacity-20', 'text-white');
+    }
+}
+
+// ============================================
+// 3. MODAL DE RESUMEN
+// ============================================
+function abrirModal(index) {
+    const noticia = noticiasCargadas[index];
+    
+    // Badge de categoría
+    const badge = document.getElementById('modalBadgeCategoria');
+    if (!badge) {
+        console.error('❌ No se encontró modalBadgeCategoria');
+        return;
+    }
+    
+    badge.textContent = noticia.categoria || 'Tecnología';
+    if (noticia.categoria === 'Tecnología') {
+        badge.className = 'bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg';
+    } else if (noticia.categoria === 'Negocios') {
+        badge.className = 'bg-gradient-to-r from-pink-600 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg';
+    } else {
+        badge.className = 'bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg';
+    }
+    
+    // Título
+    const titulo = document.getElementById('modalTitulo');
+    if (titulo) titulo.textContent = noticia.titulo;
+    
+    // Fecha
+    const fechaEl = document.getElementById('modalFecha');
+    if (fechaEl) {
+        fechaEl.innerHTML = `
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+            </svg>
+            ${formatearFecha(noticia.fecha)}
+        `;
+    }
+    
+    // Resumen (primeras 30 palabras del contenido)
+    const contenido = noticia.contenido || '';
+    const palabras = contenido.split(' ');
+    const resumen = palabras.slice(0, 30).join(' ') + (palabras.length > 30 ? '...' : '');
+    const resumenEl = document.getElementById('modalResumenTexto');
+    if (resumenEl) resumenEl.textContent = resumen;
+    
+    // Contenido formateado en párrafos
+    const contenidoEl = document.getElementById('modalContenido');
+    if (contenidoEl) {
+        const parrafos = contenido.split('\n\n').filter(p => p.trim());
+        contenidoEl.innerHTML = parrafos.length > 0 
+            ? parrafos.map(p => `<p class="mb-4 leading-relaxed text-gray-700">${p.trim()}</p>`).join('')
+            : `<p class="mb-4 leading-relaxed text-gray-700">${contenido}</p>`;
+    }
+    
+    // Puntos clave (extraer 3 frases importantes del contenido)
+    const puntosEl = document.getElementById('modalPuntosClave');
+    if (puntosEl) {
+        const frases = contenido.match(/[^\.!\?]+[\.!\?]+/g) || [];
+        const puntosClave = frases.slice(0, 3).filter(p => p.trim().length > 20);
+        
+        if (puntosClave.length === 0) {
+            // Si no hay frases completas, dividir por puntos
+            const puntosAlternativos = contenido.split('.').filter(p => p.trim().length > 20).slice(0, 3);
+            puntosEl.innerHTML = puntosAlternativos.map(punto => `
+                <li class="flex items-start gap-3 group">
+                    <span class="text-green-500 text-xl mt-1 group-hover:scale-125 transition-transform">✓</span>
+                    <span class="text-gray-700 leading-relaxed">${punto.trim()}.</span>
+                </li>
+            `).join('');
+        } else {
+            puntosEl.innerHTML = puntosClave.map(punto => `
+                <li class="flex items-start gap-3 group">
+                    <span class="text-green-500 text-xl mt-1 group-hover:scale-125 transition-transform">✓</span>
+                    <span class="text-gray-700 leading-relaxed">${punto.trim()}</span>
+                </li>
+            `).join('');
+        }
+    }
+    
+    // Fuente
+    const fuenteLink = document.getElementById('modalFuenteLink');
+    if (fuenteLink) {
+        fuenteLink.href = noticia.fuente_original || '#';
+        if (!noticia.fuente_original) {
+            fuenteLink.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            fuenteLink.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
+    
+    // Mostrar modal (el contenedor completo del modal tiene id="modalResumen")
+    const modalContainer = document.getElementById('modalResumen');
+    if (modalContainer) {
+        modalContainer.classList.remove('hidden');
+    } else {
+        console.error('❌ No se encontró el contenedor del modal con id="modalResumen"');
+    }
+}
+
+function cerrarModal() {
+    document.getElementById('modalResumen').classList.add('hidden');
+}
+
+// ============================================
+// 4. MERCADOS
+// ============================================
+async function mostrarMercado(tipo, clickedButton = null) {
+    const marketList = document.getElementById('marketList');
+    
+    // Loading con skeleton
+    marketList.innerHTML = Array(6).fill().map(() => `
+        <div class="crypto-card bg-gray-800 rounded-2xl p-6 animate-pulse">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-14 h-14 bg-gray-700 rounded-full"></div>
+                <div class="flex-1">
+                    <div class="h-4 bg-gray-700 rounded w-16 mb-2"></div>
+                    <div class="h-3 bg-gray-700 rounded w-24"></div>
+                </div>
+            </div>
+            <div class="h-10 bg-gray-700 rounded mb-2"></div>
+            <div class="h-6 bg-gray-700 rounded w-24"></div>
+        </div>
+    `).join('');
+    
+    // Actualizar tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-accent-neon', 'text-primary-dark');
+        btn.classList.add('bg-white', 'bg-opacity-20', 'text-white');
+    });
+    
+    // Si hay un botón clickeado, actualizarlo
+    if (clickedButton) {
+        clickedButton.classList.add('active', 'bg-accent-neon', 'text-primary-dark');
+        clickedButton.classList.remove('bg-white', 'bg-opacity-20', 'text-white');
+    } else {
+        // Si no hay botón, activar el correspondiente al tipo
+        const buttons = document.querySelectorAll('.tab-btn');
+        if (tipo === 'crypto' && buttons[0]) {
+            buttons[0].classList.add('active', 'bg-accent-neon', 'text-primary-dark');
+            buttons[0].classList.remove('bg-white', 'bg-opacity-20', 'text-white');
+        } else if (tipo === 'stocks' && buttons[1]) {
+            buttons[1].classList.add('active', 'bg-accent-neon', 'text-primary-dark');
+            buttons[1].classList.remove('bg-white', 'bg-opacity-20', 'text-white');
+        }
+    }
+    
+    try {
+        const endpoint = tipo === 'crypto' ? '/markets/crypto' : '/markets/stocks';
+        console.log(`📡 Fetching: ${API_BASE}${endpoint}`);
+        
+        const response = await fetch(`${API_BASE}${endpoint}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Datos recibidos:', data);
+        console.log('✅ Primer item:', data[0]); // Ver estructura exacta
+        
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            throw new Error('No hay datos disponibles');
+        }
+        
+        // Mapeo de nombres a símbolos (el backend no envía 'symbol')
+        const simbolos = {
+            'Bitcoin': 'BTC',
+            'Ethereum': 'ETH',
+            'Tether': 'USDT',
+            'BNB': 'BNB',
+            'Solana': 'SOL',
+            'XRP': 'XRP',
+            'Dogecoin': 'DOGE',
+            'TRON': 'TRX',
+            'Cardano': 'ADA',
+            'Avalanche': 'AVAX',
+            'Shiba Inu': 'SHIB',
+            'Polkadot': 'DOT',
+            'Chainlink': 'LINK',
+            'Binancecoin': 'BNB',
+            'Uniswap': 'UNI',
+            'Litecoin': 'LTC',
+            'Polygon': 'MATIC',
+            'Wrapped Bitcoin': 'WBTC'
+        };
+        
+        // Iconos emoji
+        const iconos = {
+            'BTC': '₿', 'ETH': 'Ξ', 'SOL': '◎', 'BNB': '🔶',
+            'XRP': '💧', 'ADA': '🔷', 'DOGE': '🐕', 'DOT': '⚫',
+            'MATIC': '🟣', 'AVAX': '🔺', 'LINK': '🔗', 'UNI': '🦄',
+            'USDT': '💵', 'TRX': '🔴', 'SHIB': '🐕', 'LTC': 'Ł'
+        };
+        
+        const colores = {
+            'BTC': 'from-orange-500 to-yellow-500',
+            'ETH': 'from-blue-500 to-purple-500',
+            'SOL': 'from-purple-500 to-pink-500',
+            'BNB': 'from-yellow-500 to-orange-500',
+            'default': 'from-gray-500 to-gray-600'
+        };
+        
+        marketList.innerHTML = data.slice(0, 10).map((item, i) => {
+            // IMPORTANTE: Usar campos en español
+            const nombre = item.nombre || 'Desconocido';
+            const precio = parseFloat(item.precio || 0);
+            const cambio = parseFloat(item.cambio_porcentual || 0);
+            
+            // Extraer símbolo del nombre
+            const symbol = simbolos[nombre] || nombre.substring(0, 3).toUpperCase();
+            
+            const icono = iconos[symbol] || '💰';
+            const color = colores[symbol] || colores.default;
+            const isPositive = cambio >= 0;
+            const changeColor = isPositive ? 'green' : 'red';
+            
+            console.log(`Renderizando: ${nombre} (${symbol}) - $${precio} - ${cambio}%`);
+            
+            return `
+                <div class="crypto-card group relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 
+                            hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer
+                            border border-gray-700/50 hover:border-${changeColor}-500/50">
+                    
+                    <!-- Badge de ranking -->
+                    <div class="absolute top-4 right-4 ${i < 3 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'} px-3 py-1 rounded-full text-xs font-bold border">
+                        #${i + 1}
+                    </div>
+                    
+                    <!-- Header con icono -->
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br ${color} rounded-full flex items-center justify-center text-3xl shadow-lg">
+                            ${icono}
+                        </div>
+                        <div>
+                            <p class="text-white font-bold text-xl">${symbol}</p>
+                            <p class="text-gray-400 text-sm">${nombre}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Precio y cambio -->
+                    <div class="flex items-end justify-between mb-4">
+                        <div>
+                            <p class="text-4xl font-bold text-white mb-1">
+                                $${precio.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-${changeColor}-500/20 text-${changeColor}-400 px-3 py-1 rounded-lg text-sm font-bold flex items-center gap-1">
+                                    ${isPositive ? '▲' : '▼'} ${Math.abs(cambio).toFixed(2)}%
+                                </span>
+                                <span class="text-xs text-gray-500">24h</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini sparkline -->
+                        <div class="w-24 h-16 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <svg viewBox="0 0 100 50" class="w-full h-full">
+                                <polyline points="0,${50-Math.random()*20} 20,${50-Math.random()*30} 40,${50-Math.random()*25} 60,${50-Math.random()*35} 80,${50-Math.random()*30} 100,${50-Math.random()*40}" 
+                                          stroke="${isPositive ? '#10b981' : '#ef4444'}" fill="none" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+    } catch (error) {
+        console.error('❌ Error completo:', error);
+        marketList.innerHTML = `
+            <div class="col-span-2 text-center py-12 bg-red-500/10 rounded-2xl border border-red-500/30">
+                <p class="text-red-400 text-lg mb-2">⚠️ Error al cargar datos</p>
+                <p class="text-gray-400 text-sm mb-4">${error.message}</p>
+                <button onclick="mostrarMercado('${tipo}')" class="bg-[#00ff88] text-[#0a2e1f] px-6 py-3 rounded-lg font-bold hover:scale-105 transition-transform shadow-lg">
+                    Reintentar
+                </button>
+            </div>
+        `;
+    }
+}
+
+// ============================================
+// 5. NEWSLETTER
+// ============================================
+function suscribirNewsletter(event) {
+    event.preventDefault();
+    const input = event.target.querySelector('input[type="email"]');
+    const email = input.value;
+    const button = event.target.querySelector('button[type="submit"]');
+    
+    // Validación básica
+    if (!email || !email.includes('@') || !email.includes('.')) {
+        input.classList.add('border-red-500');
+        input.classList.remove('border-accent-neon');
+        setTimeout(() => {
+            input.classList.remove('border-red-500');
+        }, 2000);
+        return;
+    }
+    
+    // Procesando
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = 'Suscribiendo...';
+    input.classList.remove('border-red-500', 'border-green-500');
+    
+    // Simulación (reemplazar con fetch real cuando backend esté listo)
+    setTimeout(() => {
+        // Éxito
+        input.classList.add('border-green-500');
+        button.textContent = '¡Suscrito! ✓';
+        button.classList.add('bg-green-500');
+        
+        // Limpiar después de 2s
+        setTimeout(() => {
+            event.target.reset();
+            input.classList.remove('border-green-500');
+            button.disabled = false;
+            button.textContent = originalText;
+            button.classList.remove('bg-green-500');
+        }, 2000);
+    }, 1000);
+}
+
+// ============================================
+// 6. LOGIN
+// ============================================
+function mostrarLogin() {
+    document.getElementById('loginPanel').classList.remove('hidden');
+}
+
+function cerrarLogin() {
+    document.getElementById('loginPanel').classList.add('hidden');
+}
+
+// ============================================
+// 7. NAVEGACIÓN
+// ============================================
+function scrollToSection(section) {
+    const sectionMap = {
+        'inicio': 'inicio',
+        'hero': 'inicio',
+        'noticias': 'noticiasSection',
+        'criptos': 'mercadosSection',
+        'mercados': 'mercadosSection',
+        'newsletter': 'newsletterSection'
+    };
+    
+    const targetId = sectionMap[section] || section;
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+        targetElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+}
+
+function scrollToNewsletter() {
+    scrollToSection('newsletter');
+}
+
+// ============================================
+// 8. UTILIDADES
+// ============================================
+function formatearFecha(fechaISO) {
+    if (!fechaISO) return 'Fecha no disponible';
+    const fecha = new Date(fechaISO);
+    const ahora = new Date();
+    const diff = Math.floor((ahora - fecha) / 1000 / 60); // minutos
+    
+    if (diff < 60) return `Hace ${diff} min`;
+    if (diff < 1440) return `Hace ${Math.floor(diff / 60)} h`;
+    return fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+}
+
+// ============================================
+// 9. SCROLL SPY
+// ============================================
+function initScrollSpy() {
+    const sections = document.querySelectorAll('section[id]');
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Remover active de todos
+                menuItems.forEach(item => item.classList.remove('active'));
+                
+                // Determinar qué sección es
+                const id = entry.target.id;
+                let sectionName = id;
+                
+                // Mapeo de IDs a nombres de sección
+                if (id === 'inicio' || id.includes('hero')) sectionName = 'inicio';
+                if (id.includes('noticias')) sectionName = 'noticias';
+                if (id.includes('mercados') || id.includes('criptos')) sectionName = 'mercados';
+                
+                // Agregar active al correspondiente
+                const activeItem = document.querySelector(`[data-section="${sectionName}"]`);
+                if (activeItem) {
+                    activeItem.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+    
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+    
+    // Smooth scroll al hacer click
+    menuItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            const href = item.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }
+            }
+        });
+    });
+}
+
+// ============================================
+// 10. INICIALIZACIÓN
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    cargarTicker();
+    cargarNoticias();
+    mostrarMercado('crypto');
+    initScrollSpy();
+    
+    // Actualizar ticker cada 30 segundos
+    setInterval(cargarTicker, 30000);
+});
+    </script>
+</body>
+</html>
