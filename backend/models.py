@@ -11,9 +11,6 @@ from backend.config import Config
 def get_db_connection():
     """
     Establece conexión con la base de datos SQLite
-    
-    Returns:
-        sqlite3.Connection: Conexión a la base de datos
     """
     conn = sqlite3.connect(Config.DATABASE_PATH)
     conn.row_factory = sqlite3.Row  # Permite acceder a columnas por nombre
@@ -22,7 +19,6 @@ def get_db_connection():
 def init_db():
     """
     Inicializa la base de datos creando las tablas necesarias
-    Se ejecuta automáticamente al iniciar la aplicación
     """
     conn = get_db_connection()
     
@@ -69,25 +65,12 @@ def init_db():
     
     print("✅ Base de datos inicializada correctamente")
 
-# Funciones auxiliares para la tabla de noticias
+# Funciones para NOTICIAS
 
 def crear_noticia(titulo, contenido, categoria, subcategoria=None, fuente_original=None, 
                   simbolo=None, precio=None, cambio_porcentual=None):
     """
     Crea una nueva noticia en la base de datos
-    
-    Args:
-        titulo (str): Título de la noticia
-        contenido (str): Contenido completo
-        categoria (str): Tecnología, Negocios o Mercados
-        subcategoria (str, optional): Para Mercados: Acciones o Criptomonedas
-        fuente_original (str, optional): URL de la fuente original
-        simbolo (str, optional): Símbolo de la acción/cripto (ej: AAPL, BTC)
-        precio (float, optional): Precio actual
-        cambio_porcentual (float, optional): Cambio porcentual
-    
-    Returns:
-        dict: Noticia creada con su ID
     """
     noticia_id = str(uuid.uuid4())
     fecha_actual = datetime.now().isoformat()
@@ -118,67 +101,128 @@ def crear_noticia(titulo, contenido, categoria, subcategoria=None, fuente_origin
     }
 
 def obtener_todas_noticias():
-    """
-    Obtiene todas las noticias ordenadas por fecha descendente
-    
-    Returns:
-        list: Lista de noticias
-    """
     conn = get_db_connection()
-    noticias = conn.execute(
-        'SELECT * FROM noticias ORDER BY fecha DESC'
-    ).fetchall()
+    noticias = conn.execute('SELECT * FROM noticias ORDER BY fecha DESC').fetchall()
     conn.close()
-    
     return [dict(noticia) for noticia in noticias]
 
 def obtener_noticias_por_categoria(categoria):
-    """
-    Obtiene noticias filtradas por categoría
-    
-    Args:
-        categoria (str): Tecnología, Negocios o Mercados
-    
-    Returns:
-        list: Lista de noticias de esa categoría
-    """
     conn = get_db_connection()
     noticias = conn.execute(
         'SELECT * FROM noticias WHERE categoria = ? ORDER BY fecha DESC',
         (categoria,)
     ).fetchall()
     conn.close()
-    
     return [dict(noticia) for noticia in noticias]
 
 def obtener_top_noticias(limite=10):
-    """
-    Obtiene las noticias más recientes (para newsletter)
-    
-    Args:
-        limite (int): Número de noticias a retornar
-    
-    Returns:
-        list: Top N noticias más recientes
-    """
     conn = get_db_connection()
     noticias = conn.execute(
         'SELECT * FROM noticias ORDER BY fecha DESC LIMIT ?',
         (limite,)
     ).fetchall()
     conn.close()
-    
     return [dict(noticia) for noticia in noticias]
 
 def contar_noticias():
-    """
-    Cuenta el total de noticias en la base de datos
-    
-    Returns:
-        int: Número total de noticias
-    """
     conn = get_db_connection()
     count = conn.execute('SELECT COUNT(*) as total FROM noticias').fetchone()['total']
     conn.close()
+    return count
+
+
+#funciones adicionales =================================================
+
+def crear_suscriptor(email, nombre=None):
+    """
+    Crea un nuevo suscriptor o REACTIVA uno existente si estaba dado de baja.
+    """
+    email_limpio = email.lower().strip()
+    suscriptor_id = str(uuid.uuid4())
+    fecha_actual = datetime.now().isoformat()
     
+    conn = get_db_connection()
+    
+    try:
+        # INTENTO 1: Insertar nuevo usuario
+        conn.execute('''
+            INSERT INTO suscriptores (id, email, nombre, fecha_suscripcion, activo)
+            VALUES (?, ?, ?, ?, 1)
+        ''', (suscriptor_id, email_limpio, nombre, fecha_actual))
+        
+        conn.commit()
+        conn.close()
+        
+        return {
+            'id': suscriptor_id,
+            'email': email_limpio,
+            'nombre': nombre,
+            'fecha_suscripcion': fecha_actual,
+            'activo': True
+        }
+        
+    except sqlite3.IntegrityError:
+        # INTENTO 2: El email ya existe. Verificamos si está inactivo para reactivarlo.
+        
+        # Buscamos el usuario existente
+        usuario = conn.execute(
+            'SELECT id, activo, nombre FROM suscriptores WHERE email = ?', 
+            (email_limpio,)
+        ).fetchone()
+        
+        if usuario:
+            if usuario['activo'] == 0:
+                # CASO: Usuario existía pero estaba dado de baja -> LO REACTIVAMOS
+                conn.execute(
+                    'UPDATE suscriptores SET activo = 1, nombre = ? WHERE email = ?',
+                    (nombre if nombre else usuario['nombre'], email_limpio)
+                )
+                conn.commit()
+                conn.close()
+                
+                print(f"♻️ Usuario {email_limpio} reactivado exitosamente.")
+                return {
+                    'id': usuario['id'],
+                    'email': email_limpio,
+                    'nombre': nombre if nombre else usuario['nombre'],
+                    'activo': True,
+                    'mensaje': 'Reactivado'
+                }
+            else:
+                # CASO: Usuario ya existe y ya está activo -> ERROR REAL
+                conn.close()
+                raise ValueError('Este correo ya se encuentra suscrito y activo.')
+        
+        conn.close()
+        raise ValueError('Error de base de datos al procesar suscripción.')
+
+def obtener_suscriptores_activos():
+    conn = get_db_connection()
+    suscriptores = conn.execute(
+        'SELECT * FROM suscriptores WHERE activo = 1 ORDER BY fecha_suscripcion DESC'
+    ).fetchall()
+    conn.close()
+    return [dict(s) for s in suscriptores]
+
+def desactivar_suscriptor(email):
+    """
+    Desactiva un suscriptor (Soft Delete: activo = 0)
+    """
+    conn = get_db_connection()
+    cursor = conn.execute(
+        'UPDATE suscriptores SET activo = 0 WHERE email = ?',
+        (email.lower().strip(),)
+    )
+    conn.commit()
+    rows_affected = cursor.rowcount
+    conn.close()
+    
+    return rows_affected > 0
+
+def contar_suscriptores():
+    conn = get_db_connection()
+    count = conn.execute(
+        'SELECT COUNT(*) as total FROM suscriptores WHERE activo = 1'
+    ).fetchone()['total']
+    conn.close()
     return count

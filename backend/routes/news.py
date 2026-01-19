@@ -13,9 +13,9 @@ from backend.models import (
 from backend.config import Config
 
 # Crear blueprint (módulo de rutas)
-news_bp = Blueprint('news', __name__)
+news_bp = Blueprint('news', __name__, url_prefix='/api')
 
-@news_bp.route('/news', methods=['GET'])
+@news_bp.route('/news', methods=['GET']) 
 def get_news():
     """
     GET /api/news

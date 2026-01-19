@@ -1,30 +1,60 @@
 """
-Script para listar modelos disponibles en tu API Key
+Script de prueba para la Base de Datos (SQLite)
+Verifica que se puedan guardar y leer noticias
 """
 
-import google.generativeai as genai
-from dotenv import load_dotenv
 import os
+from backend.models import init_db, crear_noticia, obtener_todas_noticias, get_db_connection
 
-load_dotenv()
+# Asegurar que usamos una BD de prueba o la local
+print("=" * 60)
+print("🗄️  PRUEBA DE BASE DE DATOS")
+print("=" * 60)
 
-api_key = os.getenv('GEMINI_API_KEY')
-
-if not api_key:
-    print("❌ ERROR: GEMINI_API_KEY no encontrada")
+# 1. Inicializar DB
+print("\n🛠️  Inicializando base de datos...")
+try:
+    init_db()
+    print("✅ Tablas creadas correctamente.")
+except Exception as e:
+    print(f"❌ Error al inicializar DB: {e}")
     exit(1)
 
-print(f"✅ API Key: {api_key[:10]}...\n")
-
-genai.configure(api_key=api_key)
-
-print("📋 Modelos disponibles:\n")
+# 2. Crear una noticia de prueba
+print("\n📝 Creando noticia de prueba...")
+titulo = "Test Unitario DB"
+contenido = "Esta es una noticia de prueba para verificar la persistencia de datos."
+categoria = "Tecnología"
 
 try:
-    for model in genai.list_models():
-        if 'generateContent' in model.supported_generation_methods:
-            print(f"  ✅ {model.name}")
-            print(f"     Descripción: {model.display_name}")
-            print()
+    resultado = crear_noticia(
+        titulo=titulo,
+        contenido=contenido,
+        categoria=categoria,
+        fuente_original="localhost"
+    )
+    print(f"✅ Noticia creada con ID: {resultado['id']}")
 except Exception as e:
-    print(f"❌ Error: {e}")
+    print(f"❌ Error al crear noticia: {e}")
+
+# 3. Leer noticias
+print("\n📖 Leyendo noticias de la BD...")
+try:
+    noticias = obtener_todas_noticias()
+    encontrada = False
+    for n in noticias:
+        if n['titulo'] == titulo:
+            print(f"✅ Noticia encontrada en BD: {n['titulo']}")
+            print(f"   Fecha: {n['fecha']}")
+            encontrada = True
+            break
+    
+    if not encontrada:
+        print("❌ La noticia creada no aparece en la consulta.")
+
+except Exception as e:
+    print(f"❌ Error al leer noticias: {e}")
+
+print("\n" + "=" * 60)
+print("✅ PRUEBA DE MODELOS COMPLETADA")
+print("=" * 60)

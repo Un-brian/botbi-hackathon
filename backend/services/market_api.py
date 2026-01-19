@@ -1,34 +1,37 @@
+
 import yfinance as yf
 import requests
 import logging
 from datetime import datetime, timedelta
 
-# Configuro logs para monitorear mis APIs financieras
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class MarketData:
     def __init__(self):
-        # Defino mis símbolos objetivo para el "Top 10"
-        self.stock_symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'TSLA', 'META', 'NFLX', 'AMD', 'INTC']
-        self.crypto_ids = ['bitcoin', 'ethereum', 'binancecoin', 'ripple', 'solana', 'cardano', 'polkadot', 'dogecoin', 'avalanche-2', 'shiba-inu']
+     
+        # Las obtendremos dinámicamente de CoinGecko
         
-        # Sistema de Caché en memoria
+        # Acciones siguen igual (Yahoo Finance top 10)
+        self.stock_symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 
+                              'TSLA', 'META', 'NFLX', 'AMD', 'INTC']
+        
+        # Sistema de Caché
         self._cache = {
             'stocks': {'data': [], 'timestamp': None},
             'crypto': {'data': [], 'timestamp': None}
         }
-        self.cache_duration = timedelta(minutes=10) 
+        self.cache_duration = timedelta(minutes=3)
 
     def _es_cache_valido(self, tipo):
-        """Verifico si mis datos guardados siguen frescos"""
+        """Verificar si caché sigue fresco"""
         cache = self._cache[tipo]
         if not cache['timestamp']:
             return False
         return datetime.now() - cache['timestamp'] < self.cache_duration
 
     def obtener_top_stocks(self):
-        """Obtengo precios de Acciones usando Yahoo Finance"""
+        """Obtener precios de Acciones usando Yahoo Finance"""
         if self._es_cache_valido('stocks'):
             logger.info("⚡ Usando caché para Stocks")
             return self._cache['stocks']['data']
@@ -56,39 +59,53 @@ class MarketData:
             return self._cache['stocks']['data']
 
     def obtener_top_crypto(self):
-        """Obtengo precios de Cripto usando CoinGecko API"""
+        """
+        ✅ NUEVO: Obtener TOP 10 dinámico desde CoinGecko
+        Ya no usamos lista hardcodeada
+        """
         if self._es_cache_valido('crypto'):
             logger.info("⚡ Usando caché para Cripto")
             return self._cache['crypto']['data']
 
-        logger.info("🔄 Consultando API de CoinGecko...")
+        logger.info("🔄 Consultando Top 10 de CoinGecko...")
         try:
-            ids_str = ','.join(self.crypto_ids)
-            url = f"https://api.coingecko.com/api/v3/simple/price?ids={ids_str}&vs_currencies=usd&include_24hr_change=true"
+            #  ENDPOINT CORRECTO: markets con ordenamiento por market_cap
+            url = "https://api.coingecko.com/api/v3/coins/markets"
+            params = {
+                'vs_currency': 'usd',
+                'order': 'market_cap_desc',  # Ordenar por capitalización
+                'per_page': 10,              # Top 10
+                'page': 1,
+                'sparkline': False,
+                'price_change_percentage': '24h'
+            }
             
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, params=params, timeout=10)
             response.raise_for_status()
             json_data = response.json()
             
             data = []
-            for cid in self.crypto_ids:
-                if cid in json_data:
-                    item = json_data[cid]
-                    crypto = {
-                        'nombre': cid.capitalize(),
-                        'simbolo': cid[:3].upper(),
-                        'precio': item.get('usd', 0.0),
-                        'cambio_porcentual': item.get('usd_24h_change', 0.0),
-                        'tipo': 'crypto'
-                    }
-                    data.append(crypto)
+            for coin in json_data:
+                crypto = {
+                    'nombre': coin.get('name', 'Unknown'),           # "Bitcoin"
+                    'simbolo': coin.get('symbol', '').upper(),       # "BTC"
+                    'precio': coin.get('current_price', 0.0),
+                    'cambio_porcentual': coin.get('price_change_percentage_24h', 0.0),
+                    'tipo': 'crypto',
+                    'market_cap': coin.get('market_cap', 0),         # Extra info
+                    'rank': coin.get('market_cap_rank', 0)           # Ranking
+                }
+                data.append(crypto)
             
             self._cache['crypto'] = {'data': data, 'timestamp': datetime.now()}
+            logger.info(f"✅ Top 10 obtenido: {[c['simbolo'] for c in data]}")
+            
             return data
 
         except Exception as e:
             logger.error(f"❌ Error en CoinGecko: {e}")
-            return self._cache['crypto']['data']
+            # Fallback: devolver caché viejo o lista vacía
+            return self._cache['crypto']['data'] if self._cache['crypto']['data'] else []
 
     def obtener_todo_el_mercado(self):
         return {

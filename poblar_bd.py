@@ -3,24 +3,39 @@ Script para poblar la base de datos con noticias
 Obtiene desde scraper, procesa con IA y guarda en BD
 """
 
-from backend.services.scraper import obtener_todas_las_noticias
-from backend.services.ai_processor import procesar_noticia_completa
-from backend.models import crear_noticia
+import sys
+import os
 import time
 
+# Asegurar que Python encuentre los módulos si se ejecuta desde terminal
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from backend.services.scraper import obtener_todas_las_noticias
+from backend.services.ai_processor import procesar_noticia_completa
+from backend.models import crear_noticia, init_db # <--- AGREGADO init_db
+
 print("=" * 60)
-print("🕸️  POBLANDO BASE DE DATOS")
+print("🕸️  POBLANDO BASE DE DATOS (MODO DEMO)")
 print("=" * 60)
 
+# 1. Asegurar que las tablas existan
+print("🛠️  Verificando estructura de base de datos...")
+init_db() # <--- ESTA ES LA LÍNEA CRÍTICA
+print("   ✅ Base de datos lista.")
+
 print("\n📡 Paso 1: Obteniendo noticias desde RSS feeds...")
-resultado = obtener_todas_las_noticias(limite_por_categoria=3)
+try:
+    resultado = obtener_todas_las_noticias(limite_por_categoria=3)
+except Exception as e:
+    print(f"❌ Error conectando a fuentes RSS: {e}")
+    sys.exit(1)
 
 print(f"\n📊 Obtenidas: {resultado['total']} noticias sin procesar")
 print(f"   - Tecnología: {len(resultado.get('Tecnología', []))}")
 print(f"   - Negocios: {len(resultado.get('Negocios', []))}")
 
 print("\n🤖 Paso 2: Procesando con IA y guardando en BD...")
-print("⏱️  Esto tomará ~3 minutos (rate limit de Gemini)\n")
+print("⏱️  Esto tomará unos minutos (respetando límites de Gemini API)...\n")
 
 noticias_guardadas = 0
 errores = 0
@@ -28,6 +43,9 @@ errores = 0
 for categoria in ['Tecnología', 'Negocios']:
     noticias = resultado.get(categoria, [])
     
+    if not noticias:
+        continue
+
     print(f"\n📁 Procesando categoría: {categoria}")
     
     for i, noticia in enumerate(noticias[:3], 1):  # Solo 3 por categoría
@@ -56,10 +74,10 @@ for categoria in ['Tecnología', 'Negocios']:
                 errores += 1
                 print(f"        ⚠️  Error al procesar con IA")
             
-            # Esperar 3 segundos para no saturar Gemini
-            if i < 3:  # No esperar después de la última
-                print(f"        ⏳ Esperando 3s (rate limit)...")
-                time.sleep(3)
+            # Esperar 4 segundos (Seguridad extra para la API key nueva)
+            if i < 3: 
+                print(f"        ⏳ Esperando 4s...")
+                time.sleep(4)
             
         except Exception as e:
             errores += 1
@@ -71,5 +89,4 @@ print(f"✅ PROCESO COMPLETADO")
 print(f"   Guardadas: {noticias_guardadas}")
 print(f"   Errores: {errores}")
 print("=" * 60)
-print("\n💡 Ahora puedes ver las noticias en http://localhost:5000/api/news")
-print("   O en tu frontend si está corriendo\n")
+print("\n💡 Ahora ejecuta: python app.py")

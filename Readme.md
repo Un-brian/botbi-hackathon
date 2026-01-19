@@ -19,16 +19,30 @@ Sistema completo de gestión de noticias que automatiza el ciclo desde la obtenc
 - **Automatización**: Schedule
 - **Web Scraping**: BeautifulSoup4
 
+
 ## 📁 Estructura del Proyecto
-```
-Botbi/
-├── automation/       # Tareas programadas
-├── backend/          # API y lógica del servidor
-├── data/            # Base de datos
-├── docs/            # Documentación
-├── frontend/         # Landing page
-└── templates/        # Templates de email
-```
+
+```text
+BotBi/
+├── automation/           # Automatización
+│   └── scheduler.py      # Orquestador de tareas (Daemon)
+├── backend/              # Núcleo del Servidor
+│   ├── routes/           # Endpoints API (markets.py, news.py, newsletter.py)
+│   ├── services/         # Lógica de Negocio (ai_processor.py, scraper.py, market_api.py)
+│   ├── __init__.py       # Inicialización de la App (Factory)
+│   ├── config.py         # Configuración del entorno
+│   └── models.py         # Modelos de Base de Datos
+├── data/                 # Almacenamiento local
+│   ├── .gitkeep          # Mantiene la carpeta en git
+│   └── botbi_pulse.db    # Base de datos SQLite
+├── .env.example          # Plantilla de variables de entorno
+├── .gitignore            # Archivos ignorados por git
+├── app.py                # Punto de entrada principal
+├── index.html            # Frontend (Landing Page & Dashboard)
+├── poblar_bd.py          # Script para generar datos de prueba
+├── Readme.md             # Documentación del proyecto
+├── requirements.txt      # Dependencias y librerías
+└── test_*.py             # Pruebas unitarias (ai, gemini, models, scraper)
 
 ## 🚀 Instalación
 
@@ -71,7 +85,6 @@ python backend/app.py
 
 ## 📡 API Endpoints
 
-Ver documentación completa en [`docs/API.md`](docs/API.md)
 
 - `GET /api/news` - Obtener noticias
 - `POST /api/news` - Crear noticia

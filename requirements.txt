@@ -5,6 +5,7 @@ flask-cors==4.0.0
 # Web Scraping
 beautifulsoup4==4.12.2
 requests==2.31.0
+lxml==5.1.0
 
 # IA 
 google-generativeai==0.3.2
@@ -12,8 +13,8 @@ google-generativeai==0.3.2
 # Automatización
 schedule==1.2.0
 
+# Mercados Financieros
+yfinance==0.2.36
+
 # Variables de Entorno
 python-dotenv==1.0.0
-
-# sqlite3 (built-in)
-

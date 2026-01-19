@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 class NewsScraper:
     def __init__(self):
-        # CONFIGURACIÓN ROBUSTA
         # User-Agent moderno (Chrome en Windows 10)
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -21,7 +20,7 @@ class NewsScraper:
             'Accept-Language': 'es-MX,es;q=0.9,en-US;q=0.8,en;q=0.7'
         }
         
-        # FUENTES ACTUALIZADAS Y VERIFICADAS (Enero 2026)
+        # Fuentes usadas
         self.feeds = {
             'Tecnología': [
                 'https://es.wired.com/feed/rss',      
@@ -42,7 +41,7 @@ class NewsScraper:
             response = requests.get(url, headers=self.headers, timeout=15)
             response.raise_for_status()
             
-            # Uso 'xml' (lxml) en lugar de 'html.parser'
+            # Uso 'xml' (lxml) por que html daba problemas 
             return BeautifulSoup(response.content, 'xml') 
         except Exception as e:
             logger.error(f"❌ Falló conexión a {url}: {str(e)[:100]}...") 
@@ -70,7 +69,7 @@ class NewsScraper:
                     break
 
                 try:
-                    # Extracción resiliente
+                    # Extracción 
                     titulo = item.find('title').text.strip()
                     
                     link = item.find('link')

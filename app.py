@@ -1,86 +1,46 @@
 """
 Servidor Principal - Botbi Pulse
-Punto de entrada de la aplicación Flask
+Punto de entrada: Importa la app factory y lanza el Scheduler.
 """
 
-from flask import Flask, jsonify
-from flask_cors import CORS
+import threading
+from backend import create_app
 from backend.config import Config
-from backend.models import init_db
-from backend.routes.news import news_bp
-#el módulo de mercados
-from backend.routes.markets import markets_bp 
+# Importamos la función de arranque del scheduler
+from automation.scheduler import iniciar_scheduler
 
-def create_app():
-    """
-    Factory function para crear la aplicación Flask
-    Patrón recomendado para aplicaciones Flask modulares
-    """
-    app = Flask(__name__)
-    
-    # Configuración
-    app.config.from_object(Config)
-    
-    # Habilitar CORS
-    CORS(app)
-    
-    # Inicializar base de datos
-    init_db()
-    
-    # Registrar blueprints (módulos de rutas)
-    app.register_blueprint(news_bp, url_prefix='/api')
-    
-    # [NUEVO] Registramos las rutas de mercados
-    # Ahora las URLs serán: /api/markets/crypto, /api/markets/stocks
-    app.register_blueprint(markets_bp) 
-    
-    # Ruta raíz (health check)
-    @app.route('/')
-    def index():
-        return jsonify({
-            'service': 'Botbi Pulse API',
-            'version': '1.0.0',
-            'status': 'online',
-            'endpoints': {
-                'news': '/api/news',
-                'markets_crypto': '/api/markets/crypto', # Agregué esto al mapa
-                'markets_stocks': '/api/markets/stocks', # Agregué esto al mapa
-                'status': '/api/status',
-                'health': '/api/health'
-            }
-        }), 200
-    
-    # Health check
-    @app.route('/api/health')
-    def health():
-        return jsonify({
-            'status': 'healthy',
-            'database': 'connected',
-            'ai': 'configured' if Config.GEMINI_API_KEY else 'not configured'
-        }), 200
-    
-    return app
+# Inicializamos la aplicación
+app = create_app()
+
+def run_scheduler_background():
+    """Wrapper para correr el scheduler en un hilo daemon"""
+    try:
+        iniciar_scheduler()
+    except Exception as e:
+        print(f"❌ Error fatal en scheduler thread: {e}")
 
 if __name__ == '__main__':
-    app = create_app()
-    
     print("=" * 60)
-    print(" BOTBI PULSE - Sistema Automatizado de Noticias")
+    print(" 🚀 BOTBI PULSE - FULL STACK ONLINE")
     print("=" * 60)
-    print(f" Base de datos: {Config.DATABASE_PATH}")
-    print(f" Servidor: http://{Config.HOST}:{Config.PORT}")
-    print(f" IA configurada: {'✅ Sí' if Config.GEMINI_API_KEY else '❌ No'}")
+    print(f" 📂 Base de datos: {Config.DATABASE_PATH}")
+    print(f" 📡 Servidor: http://{Config.HOST}:{Config.PORT}")
     print("=" * 60)
-    print("\n Endpoints disponibles:")
-    print("   GET  /api/news          - Obtener noticias")
-    print("   GET  /api/markets/crypto - Top 10 Cripto (NUEVO)")
-    print("   GET  /api/markets/stocks - Top 10 Acciones (NUEVO)")
-    print("   POST /api/news          - Crear noticia")
-    print("   GET  /api/status        - Estado del sistema")
-    print("\n Presiona Ctrl+C para detener el servidor\n")
-    
+
+    # AUTOLOADER: Arrancar Scheduler en Hilo Secundario para no usar dos terminales 
+    print(" ⚙️  Iniciando motor de automatización (Scheduler)...")
+    scheduler_thread = threading.Thread(target=run_scheduler_background)
+    scheduler_thread.daemon = True # Se cierra cuando se cierra la app principal
+    scheduler_thread.start()
+    # -----------------------------------------------------
+
+    print("\n Endpoints Activos:")
+    print("   ✅ API & Web Interface")
+    print("   ✅ Scheduler Background (Noticias + Mercados)\n")
+
     app.run(
         host=Config.HOST,
         port=Config.PORT,
-        debug=Config.DEBUG
+        debug=Config.DEBUG,
+        use_reloader=False # Importante False para que no duplique el scheduler en debug
     )

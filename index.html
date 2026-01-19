@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Botbi Pulse - El pulso de las finanzas inteligentes</title>
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tailwind Custom Configuration -->
     <script>
         tailwind.config = {
             theme: {
@@ -114,10 +111,11 @@
             border-width: 0;
         }
         
-        /* Line clamp utilities */
+        /* Line clamp utilities - CORREGIDO PARA VS CODE */
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2; /* Propiedad estándar */
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -125,6 +123,7 @@
         .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
+            line-clamp: 3; /* Propiedad estándar */
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -201,57 +200,45 @@
     </style>
 </head>
 <body class="overflow-x-hidden">
-    <!-- Layout Principal 80/20 -->
     <div class="flex min-h-screen">
         
-        <!-- Lado Izquierdo: Contenido Principal (80%) -->
         <main class="flex-1 w-full lg:w-4/5 main-gradient">
             
-            <!-- 1. TICKER DE CRIPTOMONEDAS (arriba de todo) -->
             <div class="ticker overflow-hidden bg-black bg-opacity-40 backdrop-blur-md py-3">
                 <div class="ticker-content" id="tickerContent">
-                    <!-- JavaScript llenará esto con datos de /api/markets/ticker -->
-                </div>
+                    </div>
             </div>
             
-            <!-- 2. HERO SECTION -->
             <section id="inicio" class="hero relative px-8 lg:px-12 py-20 overflow-hidden">
-                <!-- Background decorativo -->
                 <div class="absolute inset-0 opacity-10">
                     <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(0,255,136,0.03) 50px, rgba(0,255,136,0.03) 51px);"></div>
                 </div>
                 
-                <!-- Floating stats cards -->
                 <div class="floating-stats absolute inset-0 pointer-events-none">
-                    <!-- Card 1 - BTC Price -->
                     <div class="stat-card absolute top-64 left-24 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-1">
                         <p class="text-sm text-white/70 mb-1">BTC Price</p>
                         <p class="text-2xl font-bold text-white">$43.5K</p>
                         <p class="text-xs text-green-400">+2.4% ▲</p>
                     </div>
                     
-                    <!-- Card 2 - Noticias IA -->
                     <div class="stat-card absolute top-48 right-24 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-2">
                         <p class="text-sm text-white/70 mb-1">Noticias IA</p>
                         <p class="text-3xl font-bold text-white">1,247</p>
                         <p class="text-xs text-white/60">Esta semana</p>
                     </div>
                     
-                    <!-- Card 3 - ETH Price -->
                     <div class="stat-card absolute top-1/2 left-32 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-3">
                         <p class="text-sm text-white/70 mb-1">ETH Price</p>
                         <p class="text-2xl font-bold text-white">$2.3K</p>
                         <p class="text-xs text-red-400">-1.2% ▼</p>
                     </div>
                     
-                    <!-- Card 4 - Usuarios -->
                     <div class="stat-card absolute top-2/3 right-20 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/20 animate-float-4">
                         <p class="text-sm text-white/70 mb-1">Usuarios activos</p>
                         <p class="text-2xl font-bold text-white">8.2K</p>
                         <p class="text-xs text-green-400">+340 hoy</p>
                     </div>
                     
-                    <!-- Card 5 - IA Status -->
                     <div class="stat-card absolute bottom-32 right-40 bg-white/10 backdrop-blur-md rounded-xl p-3 shadow-2xl border border-white/20 animate-float-5">
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-lg">
@@ -265,7 +252,6 @@
                     </div>
                 </div>
                 
-                <!-- Contenido principal (sobre las cards) -->
                 <div class="relative z-10">
                     <h1 class="text-4xl lg:text-6xl font-bold text-white mb-4">
                         BOTBI PULSE: <span class="text-accent-neon">El pulso de las finanzas inteligentes</span>
@@ -279,11 +265,9 @@
                 </div>
             </section>
             
-            <!-- 3. GRID DE NOTICIAS -->
             <section class="news-grid px-8 lg:px-12 pb-20" id="noticiasSection">
                 <h2 class="text-3xl font-bold text-white mb-8">Últimas Noticias</h2>
                 
-                <!-- Filtros de categoría -->
                 <div class="flex gap-4 mb-8 flex-wrap">
                     <button class="filter-btn bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-colors" onclick="filtrarNoticias('Todas', this)">
                         Todas
@@ -296,12 +280,9 @@
                     </button>
                 </div>
                 
-                <!-- Grid de tarjetas (2 columnas) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="newsGrid">
-                    <!-- JavaScript llenará esto -->
-                </div>
+                    </div>
                 
-                <!-- Loading skeleton (mostrar mientras carga) -->
                 <div id="loadingSkeleton" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
                     <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
@@ -309,18 +290,15 @@
                     <div class="skeleton bg-white rounded-lg p-6 h-64"></div>
                 </div>
                 
-                <!-- Error state -->
                 <div id="errorState" class="hidden bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg">
                     <p class="font-bold">Error al cargar noticias</p>
                     <p>No se pudo conectar con el servidor. <button onclick="cargarNoticias()" class="underline">Reintentar</button></p>
                 </div>
             </section>
             
-            <!-- 4. SECCIÓN DE MERCADOS -->
             <section class="markets px-8 lg:px-12 pb-20" id="mercadosSection">
                 <h2 class="text-3xl font-bold text-white mb-8">Mercados en Tiempo Real</h2>
                 
-                <!-- Tabs: Acciones / Criptos -->
                 <div class="flex gap-4 mb-6">
                     <button class="tab-btn active bg-accent-neon text-primary-dark px-6 py-2 rounded-lg font-semibold" onclick="mostrarMercado('crypto', this)">
                         Criptomonedas
@@ -330,15 +308,12 @@
                     </button>
                 </div>
                 
-                <!-- Grid de mercados (cards premium) -->
                 <div class="bg-white bg-opacity-10 rounded-lg p-6 backdrop-blur-sm">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="marketList">
-                        <!-- JavaScript llenará esto con cards premium -->
-                    </div>
+                        </div>
                 </div>
             </section>
             
-            <!-- 5. NEWSLETTER SIGNUP -->
             <section class="newsletter px-8 lg:px-12 py-20 border-t border-white border-opacity-20" id="newsletterSection">
                 <div class="max-w-2xl">
                     <h2 class="text-4xl font-bold text-white mb-4">Recibe el Pulso Diario</h2>
@@ -361,20 +336,21 @@
                             Suscribirme
                         </button>
                     </form>
+                    <div class="mt-4 text-sm text-gray-400">
+                        ¿Ya estás suscrito y quieres salir? 
+                        <button onclick="abrirModalDesuscribir()" class="text-accent-neon hover:underline">Cancelar suscripción</button>
+                    </div>
                 </div>
             </section>
         </main>
         
-        <!-- Lado Derecho: Menú Lateral Fijo (20%) -->
         <aside class="hidden lg:block w-80 bg-white p-8 sticky top-0 h-screen overflow-y-auto shadow-xl">
-            <!-- Branding -->
             <div class="mb-12 pb-6 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">BOTBI PULSE</h2>
                 <p class="text-sm text-gray-500 mt-1">Finanzas inteligentes</p>
             </div>
             
             <nav class="space-y-2">
-                <!-- Inicio -->
                 <a href="#inicio" class="menu-item group" data-section="inicio">
                     <div class="flex items-center gap-4 px-5 py-4 rounded-xl transition-all hover:bg-gray-50 cursor-pointer">
                         <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#00ff88]/20 transition-all">
@@ -384,7 +360,6 @@
                     </div>
                 </a>
                 
-                <!-- Noticias -->
                 <a href="#noticiasSection" class="menu-item group" data-section="noticias">
                     <div class="flex items-center gap-4 px-5 py-4 rounded-xl transition-all hover:bg-gray-50 cursor-pointer">
                         <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#00ff88]/20 transition-all">
@@ -394,7 +369,6 @@
                     </div>
                 </a>
                 
-                <!-- Mercados -->
                 <a href="#mercadosSection" class="menu-item group" data-section="mercados">
                     <div class="flex items-center gap-4 px-5 py-4 rounded-xl transition-all hover:bg-gray-50 cursor-pointer">
                         <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-[#00ff88]/20 transition-all">
@@ -405,7 +379,6 @@
                 </a>
             </nav>
             
-            <!-- CTA de suscripción (reemplaza el login) -->
             <div class="mt-8 pt-6 border-t border-gray-200">
                 <button onclick="scrollToNewsletter()" class="w-full flex items-center gap-4 px-5 py-4 rounded-xl bg-gradient-to-r from-[#00ff88] to-[#00cc6a] hover:from-[#00cc6a] hover:to-[#00ff88] transition-all shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/50 cursor-pointer group">
                     <div class="w-10 h-10 rounded-lg bg-white/30 flex items-center justify-center">
@@ -415,7 +388,6 @@
                 </button>
             </div>
             
-            <!-- Stats del sistema -->
             <div class="mt-8 p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
                 <p class="text-xs text-gray-500 mb-2">Actualizado hace 2 min</p>
                 <div class="flex items-center justify-between">
@@ -430,11 +402,9 @@
         
     </div>
 
-    <!-- MODAL DE RESUMEN IA -->
     <div id="modalResumen" class="modal hidden fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4" onclick="cerrarModal()">
         <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onclick="event.stopPropagation()">
             
-            <!-- Header sticky -->
             <div class="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 rounded-t-3xl z-10">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-3">
@@ -467,9 +437,7 @@
                 </div>
             </div>
             
-            <!-- Body -->
             <div class="px-8 py-6">
-                <!-- Resumen destacado -->
                 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-r-xl p-6 mb-8 shadow-sm">
                     <div class="flex items-center gap-2 mb-3">
                         <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -481,24 +449,19 @@
                     <p id="modalResumenTexto" class="text-blue-900 leading-relaxed text-base"></p>
                 </div>
                 
-                <!-- Contenido principal -->
                 <div id="modalContenido" class="prose prose-lg max-w-none mb-8">
-                    <!-- Se inyecta dinámicamente -->
-                </div>
+                    </div>
                 
-                <!-- Puntos clave -->
                 <div class="bg-gray-50 rounded-2xl p-6 mb-6">
                     <h3 class="font-bold text-xl text-gray-900 mb-4 flex items-center gap-2">
                         <span class="text-2xl">🔑</span>
                         Puntos Clave
                     </h3>
                     <ul id="modalPuntosClave" class="space-y-3">
-                        <!-- Se inyectan dinámicamente -->
-                    </ul>
+                        </ul>
                 </div>
             </div>
             
-            <!-- Footer sticky -->
             <div class="sticky bottom-0 bg-gradient-to-t from-white via-white to-transparent px-8 py-6 border-t border-gray-200 rounded-b-3xl">
                 <div class="flex items-center gap-4">
                     <a id="modalFuenteLink" href="#" target="_blank" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-4 px-6 rounded-xl transition-all text-center">
@@ -512,7 +475,74 @@
         </div>
     </div>
 
-    <!-- PANEL DE LOGIN (slide-in) -->
+    <div id="modalSuscripcionExito" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl transform scale-100 transition-transform duration-300">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <span class="text-3xl">🎉</span>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-900 mb-2 font-sans">¡Ya estás dentro!</h3>
+            <p class="text-gray-500 mb-6 leading-relaxed">
+                Bienvenido a <span class="font-bold text-green-600">BotBi Pulse</span>. Hemos enviado el resumen de hoy a tu correo.
+            </p>
+            
+            <button onclick="document.getElementById('modalSuscripcionExito').classList.add('hidden')" class="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-500/30 transition-all transform hover:scale-[1.02]">
+                ¡Genial, gracias!
+            </button>
+        </div>
+    </div>
+
+    <div id="modalYaSuscrito" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl border-t-4 border-yellow-400">
+            <div class="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl">⚡</span>
+            </div>
+            
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Ya eres parte del equipo</h3>
+            <p class="text-gray-500 mb-6 text-sm">
+                Este correo ya está registrado y activo. Revisa tu bandeja de Spam si no ves nuestras noticias.
+            </p>
+            
+            <button onclick="document.getElementById('modalYaSuscrito').classList.add('hidden')" class="w-full bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <div id="modalDesuscribir" class="modal hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 relative shadow-2xl">
+            <button onclick="document.getElementById('modalDesuscribir').classList.add('hidden')" class="absolute top-5 right-5 text-gray-400 hover:text-gray-900 transition-colors text-xl font-bold">
+                ✕
+            </button>
+            
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900 mb-1">Cancelar Suscripción</h3>
+                <p class="text-sm text-gray-400">¿Seguro que quieres dejar de recibir el pulso financiero?</p>
+            </div>
+            
+            <form onsubmit="desuscribirNewsletter(event)" class="space-y-4">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-400">✉️</span>
+                    </div>
+                    <input type="email" id="emailDesuscribir" placeholder="Ingresa tu correo" required 
+                           class="w-full pl-10 pr-4 py-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 focus:bg-white focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none transition-all placeholder-gray-400 font-medium">
+                </div>
+                
+                <div id="msgDesuscribir" class="text-center text-sm font-medium hidden p-2 rounded-lg bg-gray-50"></div>
+
+                <div class="grid grid-cols-2 gap-3 mt-2">
+                    <button type="button" onclick="document.getElementById('modalDesuscribir').classList.add('hidden')" class="w-full bg-white border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                        Volver
+                    </button>
+                    <button type="submit" class="w-full bg-red-50 text-red-500 border border-red-100 font-bold py-3 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                        Confirmar Baja
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="loginPanel" class="hidden fixed top-0 right-0 w-96 h-full bg-white bg-opacity-95 backdrop-blur-xl shadow-2xl z-50 p-8">
         <button class="absolute top-4 right-4 text-gray-400 hover:text-black text-3xl" onclick="cerrarLogin()">×</button>
         
@@ -556,10 +586,10 @@ async function cargarTicker() {
         
         const tickerHTML = data.map(cripto => `
             <div class="flex items-center gap-3 px-6 text-white font-mono text-sm whitespace-nowrap">
-                <span class="font-bold">${cripto.symbol}</span>
-                <span>$${parseFloat(cripto.price).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
-                <span class="${cripto.change_percent >= 0 ? 'text-green-400' : 'text-red-400'}">
-                    ${cripto.change_percent >= 0 ? '▲' : '▼'} ${Math.abs(cripto.change_percent).toFixed(2)}%
+                <span class="font-bold">${cripto.simbolo || cripto.symbol || 'N/A'}</span>
+                <span>$${parseFloat(cripto.precio || cripto.price || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                <span class="${(cripto.cambio_porcentual || cripto.change_percent || 0) >= 0 ? 'text-green-400' : 'text-red-400'}">
+                    ${(cripto.cambio_porcentual || cripto.change_percent || 0) >= 0 ? '▲' : '▼'} ${Math.abs(cripto.cambio_porcentual || cripto.change_percent || 0).toFixed(2)}%
                 </span>
             </div>
         `).join('');
@@ -605,7 +635,6 @@ async function cargarNoticias(categoria = 'Todas') {
         // Renderizar noticias con diseño premium
         grid.innerHTML = noticiasCargadas.slice(0, 6).map((noticia, index) => {
             const categoria = noticia.categoria || 'Tecnología';
-            const categoriaLower = categoria.toLowerCase();
             
             // Determinar colores según categoría
             let borderColor = 'border-blue-500';
@@ -847,28 +876,6 @@ async function mostrarMercado(tipo, clickedButton = null) {
             throw new Error('No hay datos disponibles');
         }
         
-        // Mapeo de nombres a símbolos (el backend no envía 'symbol')
-        const simbolos = {
-            'Bitcoin': 'BTC',
-            'Ethereum': 'ETH',
-            'Tether': 'USDT',
-            'BNB': 'BNB',
-            'Solana': 'SOL',
-            'XRP': 'XRP',
-            'Dogecoin': 'DOGE',
-            'TRON': 'TRX',
-            'Cardano': 'ADA',
-            'Avalanche': 'AVAX',
-            'Shiba Inu': 'SHIB',
-            'Polkadot': 'DOT',
-            'Chainlink': 'LINK',
-            'Binancecoin': 'BNB',
-            'Uniswap': 'UNI',
-            'Litecoin': 'LTC',
-            'Polygon': 'MATIC',
-            'Wrapped Bitcoin': 'WBTC'
-        };
-        
         // Iconos emoji
         const iconos = {
             'BTC': '₿', 'ETH': 'Ξ', 'SOL': '◎', 'BNB': '🔶',
@@ -886,13 +893,10 @@ async function mostrarMercado(tipo, clickedButton = null) {
         };
         
         marketList.innerHTML = data.slice(0, 10).map((item, i) => {
-            // IMPORTANTE: Usar campos en español
             const nombre = item.nombre || 'Desconocido';
+            const symbol = item.simbolo || 'N/A';
             const precio = parseFloat(item.precio || 0);
             const cambio = parseFloat(item.cambio_porcentual || 0);
-            
-            // Extraer símbolo del nombre
-            const symbol = simbolos[nombre] || nombre.substring(0, 3).toUpperCase();
             
             const icono = iconos[symbol] || '💰';
             const color = colores[symbol] || colores.default;
@@ -904,12 +908,10 @@ async function mostrarMercado(tipo, clickedButton = null) {
                             hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer
                             border border-gray-700/50 hover:border-${changeColor}-500/50">
                     
-                    <!-- Badge de ranking -->
                     <div class="absolute top-4 right-4 ${i < 3 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'} px-3 py-1 rounded-full text-xs font-bold border">
                         #${i + 1}
                     </div>
                     
-                    <!-- Header con icono -->
                     <div class="flex items-center gap-4 mb-4">
                         <div class="w-14 h-14 bg-gradient-to-br ${color} rounded-full flex items-center justify-center text-3xl shadow-lg">
                             ${icono}
@@ -920,7 +922,6 @@ async function mostrarMercado(tipo, clickedButton = null) {
                         </div>
                     </div>
                     
-                    <!-- Precio y cambio -->
                     <div class="flex items-end justify-between mb-4">
                         <div>
                             <p class="text-4xl font-bold text-white mb-1">
@@ -934,11 +935,10 @@ async function mostrarMercado(tipo, clickedButton = null) {
                             </div>
                         </div>
                         
-                        <!-- Mini sparkline -->
                         <div class="w-24 h-16 opacity-60 group-hover:opacity-100 transition-opacity">
                             <svg viewBox="0 0 100 50" class="w-full h-full">
                                 <polyline points="0,${50-Math.random()*20} 20,${50-Math.random()*30} 40,${50-Math.random()*25} 60,${50-Math.random()*35} 80,${50-Math.random()*30} 100,${50-Math.random()*40}" 
-                                          stroke="${isPositive ? '#10b981' : '#ef4444'}" fill="none" stroke-width="2"/>
+                                            stroke="${isPositive ? '#10b981' : '#ef4444'}" fill="none" stroke-width="2"/>
                             </svg>
                         </div>
                     </div>
@@ -961,46 +961,105 @@ async function mostrarMercado(tipo, clickedButton = null) {
 }
 
 // ============================================
-// 5. NEWSLETTER
+// 5. NEWSLETTER (MODIFICADA PARA MODALES)
 // ============================================
-function suscribirNewsletter(event) {
+async function suscribirNewsletter(event) {
     event.preventDefault();
-    const input = event.target.querySelector('input[type="email"]');
-    const email = input.value;
-    const button = event.target.querySelector('button[type="submit"]');
     
-    // Validación básica
-    if (!email || !email.includes('@') || !email.includes('.')) {
-        input.classList.add('border-red-500');
-        input.classList.remove('border-accent-neon');
-        setTimeout(() => {
-            input.classList.remove('border-red-500');
-        }, 2000);
-        return;
-    }
+    // 1. Guardamos referencias ANTES del await (Critical Fix)
+    const form = event.target;
+    const input = form.querySelector('input[type="email"]');
+    const button = form.querySelector('button[type="submit"]');
+    const email = input.value.trim();
     
-    // Procesando
+    // Estado visual: procesando
+    const textoOriginal = button.textContent;
     button.disabled = true;
-    const originalText = button.textContent;
-    button.textContent = 'Suscribiendo...';
-    input.classList.remove('border-red-500', 'border-green-500');
+    button.textContent = 'Procesando...';
+    button.classList.add('opacity-75');
     
-    // Simulación (reemplazar con fetch real cuando backend esté listo)
-    setTimeout(() => {
-        // Éxito
-        input.classList.add('border-green-500');
-        button.textContent = '¡Suscrito! ✓';
-        button.classList.add('bg-green-500');
+    // Limpiar errores previos
+    input.classList.remove('border-red-500', 'text-red-500');
+    
+    try {
+        const response = await fetch(`${API_BASE}/newsletter/subscribe`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
         
-        // Limpiar después de 2s
+        const data = await response.json();
+        
+        if (response.status === 201) {
+            // ÉXITO (Nuevo o Reactivado) -> Mostrar Modal
+            document.getElementById('modalSuscripcionExito').classList.remove('hidden');
+            form.reset(); 
+        } else if (response.status === 409) {
+            // DUPLICADO -> Mostrar Modal
+            document.getElementById('modalYaSuscrito').classList.remove('hidden');
+        } else {
+            throw new Error(data.error || 'Error desconocido');
+        }
+        
+    } catch (error) {
+        console.error('Error silencioso en suscripción:', error);
+        // Fallback visual sutil en el input (NO ALERT)
+        input.classList.add('border-red-500', 'text-red-500');
+        input.value = "Error de conexión. Intenta de nuevo.";
         setTimeout(() => {
-            event.target.reset();
-            input.classList.remove('border-green-500');
-            button.disabled = false;
-            button.textContent = originalText;
-            button.classList.remove('bg-green-500');
-        }, 2000);
-    }, 1000);
+            input.value = email; // Restaurar email
+            input.classList.remove('border-red-500', 'text-red-500');
+        }, 3000);
+    } finally {
+        // Restaurar botón
+        button.disabled = false;
+        button.textContent = textoOriginal;
+        button.classList.remove('opacity-75');
+    }
+}
+
+// ============================================
+// 5.1 DESUSCRIPCIÓN (NUEVA)
+// ============================================
+function abrirModalDesuscribir() {
+    document.getElementById('modalDesuscribir').classList.remove('hidden');
+    // Limpiar estado anterior
+    const msgDiv = document.getElementById('msgDesuscribir');
+    msgDiv.classList.add('hidden');
+    msgDiv.className = "mt-4 text-center text-sm hidden";
+    document.getElementById('emailDesuscribir').value = "";
+}
+
+async function desuscribirNewsletter(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailDesuscribir').value;
+    const msgDiv = document.getElementById('msgDesuscribir');
+    
+    try {
+        const res = await fetch(`${API_BASE}/newsletter/unsubscribe`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        
+        msgDiv.classList.remove('hidden');
+        if (res.ok) {
+            msgDiv.className = "mt-4 text-center text-sm text-green-600 font-bold bg-green-50 p-2 rounded";
+            msgDiv.textContent = "Te has dado de baja correctamente.";
+            setTimeout(() => {
+                document.getElementById('modalDesuscribir').classList.add('hidden');
+                document.getElementById('emailDesuscribir').value = "";
+            }, 2000);
+        } else {
+            msgDiv.className = "mt-4 text-center text-sm text-red-500 font-bold bg-red-50 p-2 rounded";
+            msgDiv.textContent = data.error || "No encontramos ese email.";
+        }
+    } catch (err) {
+        msgDiv.classList.remove('hidden');
+        msgDiv.className = "mt-4 text-center text-sm text-red-500 font-bold";
+        msgDiv.textContent = "Error de conexión";
+    }
 }
 
 // ============================================

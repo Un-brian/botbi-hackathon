@@ -72,8 +72,8 @@ CONTENIDO: [tu contenido reescrito]
             titulo_reescrito = titulo_parte
             contenido_reescrito = contenido_parte
         else:
-            # Si no sigue el formato, uso el texto completo como contenido
-            # y genero un título simple
+           
+            #  genero un título simple
             contenido_reescrito = texto_completo.strip()
             titulo_reescrito = _generar_titulo_simple(contenido_reescrito)
         
@@ -227,7 +227,7 @@ def procesar_noticia_completa(titulo_original, contenido_original, categoria):
         }
     
     # Espero un poco para no saturar la API (rate limiting)
-    time.sleep(3)
+    time.sleep(5)
     
     # Genero resumen
     resumen = generar_resumen(resultado_reescritura['contenido'])
